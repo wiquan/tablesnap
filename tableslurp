@@ -28,7 +28,7 @@ import os
 import pwd
 import socket
 import sys
-from Queue import Queue
+from queue import Queue
 
 log = logging.getLogger('tableslurp')
 stderr = logging.StreamHandler()

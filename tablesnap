@@ -5,7 +5,7 @@ import boto
 import argparse
 from traceback import format_exc
 from threading import Thread
-from Queue import Queue
+from queue import Queue
 import logging
 import logging.handlers
 import os.path
@@ -17,7 +17,8 @@ import pwd
 import grp
 import re
 import signal
-import StringIO
+import io
+
 
 default_log = logging.getLogger('tablesnap')
 if os.environ.get('TABLESNAP_SYSLOG', False):
@@ -177,8 +178,8 @@ class UploadHandler(pyinotify.ProcessEvent):
                 # Compute MD5 sum of file
                 try:
                     fp = open(filename, "r")
-                except IOError as (errno, strerror):
-                    if errno == 2:
+                except IOError as e:
+                    if e.errno == 2:
                         # The file was removed, return True to skip this file.
                         return True
 
@@ -246,7 +247,7 @@ class UploadHandler(pyinotify.ProcessEvent):
         while True:
             chunk = f.read(chunk_size)
             if chunk:
-                yield StringIO.StringIO(chunk)
+                yield io.StringIO(chunk)
             else:
                 break
         if f and not f.closed:
